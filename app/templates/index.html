@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Inicio - Biblioteca Virtual{% endblock %}
+{% block content %}
+  <h1 class="mb-4">Catálogo de Libros</h1>
+  <form class="d-flex mb-4" method="GET" action="{{ url_for('main.index') }}">
+    <input class="form-control me-2" type="search" placeholder="Buscar por título, autor o tema" name="q">
+    <button class="btn btn-outline-success" type="submit">Buscar</button>
+  </form>
+  <div class="row">
+    {% if books %}
+      {% for book in books %}
+        <div class="col-md-3 mb-4">
+          <div class="card h-100">
+            {% if book.cover_url %}
+              <img src="{{ book.cover_url }}" class="card-img-top" alt="{{ book.title }}">
+            {% else %}
+              <img src="{{ url_for('static', filename='img/default_cover.jpg') }}" class="card-img-top" alt="{{ book.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ book.title }}</h5>
+              <p class="card-text">{{ book.author }}</p>
+              <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="btn btn-primary">Ver detalle</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No hay libros disponibles en el catálogo.</p>
+    {% endif %}
+  </div>
+{% endblock %}

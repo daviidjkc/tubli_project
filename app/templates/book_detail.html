@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }}{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    {% if book.cover_url %}
+      <img src="{{ book.cover_url }}" class="img-fluid" alt="{{ book.title }}">
+    {% else %}
+      <img src="{{ url_for('static', filename='img/default_cover.jpg') }}" class="img-fluid" alt="{{ book.title }}">
+    {% endif %}
+  </div>
+  <div class="col-md-8">
+    <h2>{{ book.title }}</h2>
+    <p><strong>Autor:</strong> {{ book.author }}</p>
+    <p><strong>Año:</strong> {{ book.year }}</p>
+    <p><strong>Idioma:</strong> {{ book.language }}</p>
+    <p><strong>Tema:</strong> {{ book.subject }}</p>
+    {% if book.file_url %}
+      <a href="{{ book.file_url }}" class="btn btn-success" target="_blank">Descargar / Abrir</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

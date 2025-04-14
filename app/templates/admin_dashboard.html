@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Panel de Administración{% endblock %}
+{% block content %}
+<h1 class="mb-4">Panel de Administración</h1>
+<a href="{{ url_for('admin.new_book') }}" class="btn btn-primary mb-3">Agregar Nuevo Libro</a>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Autor</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <td>{{ book.id }}</td>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+      <td>
+        <a href="{{ url_for('admin.edit_book', book_id=book.id) }}" class="btn btn-warning btn-sm">Editar</a>
+        <!-- Puedes agregar un botón de "Eliminar" si implementas la funcionalidad -->
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

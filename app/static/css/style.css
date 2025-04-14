@@ -1,0 +1,160 @@
+/* General */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #bee7d1; /* Fondo gris claro */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para el navbar */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-link {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    color: #0d6efd; /* Azul de Bootstrap */
+}
+
+/* Catálogo de Libros */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 450px !important;/* Altura fija para todas las tarjetas */
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos internos se alineen verticalmente */
+    justify-content: space-between; /* Espaciado entre los elementos */
+    margin-bottom: 20px; /* Espacio entre las tarjetas */
+    background-color: #4ed491; /* Fondo blanco para las tarjetas */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Efecto de elevación */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
+}
+
+.card-img-top {
+    border-radius: 10px 10px 0 0; /* Bordes redondeados solo en la parte superior */
+    height: 300px; /* Altura fija para las imágenes */
+    width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
+    object-fit: contain; /* Ajusta la imagen al tamaño del contenedor sin recortarla */
+    background-color: #f8f9fa; /* Fondo gris claro para imágenes más pequeñas */
+}
+
+.card-body {
+    flex-grow: 1; /* Permite que el contenido del cuerpo ocupe el espacio disponible */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    white-space: nowrap; /* Evita que el texto ocupe varias líneas */
+    overflow: hidden; /* Oculta el texto que excede el ancho del contenedor */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos al final del texto recortado */
+}
+
+.card-text {
+    color: #6c757d; /* Texto gris */
+    font-size: 0.9rem;
+    margin-bottom: auto; /* Empuja el botón hacia abajo */
+}
+
+/* Botones */
+.card-body .btn {
+    align-self: flex-start; /* Alinea el botón a la izquierda */
+    margin-top: auto; /* Empuja el botón hacia la parte inferior */
+    background-color: #0d6efd;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.card-body .btn:hover {
+    background-color: #0056b3; /* Azul más oscuro */
+    transform: scale(1.05); /* Efecto de zoom */
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+/* Footer */
+footer {
+    background-color: #343a40; /* Fondo oscuro */
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Formularios */
+form input[type="search"] {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+form button {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .card {
+        height: auto; /* Permite que las tarjetas se ajusten automáticamente en pantallas pequeñas */
+        margin-bottom: 20px;
+    }
+
+    .card-img-top {
+        height: 200px; /* Ajusta la altura de las imágenes en pantallas pequeñas */
+    }
+
+    .card-title {
+        font-size: 1rem; /* Reduce el tamaño del título en pantallas pequeñas */
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+    }
+}

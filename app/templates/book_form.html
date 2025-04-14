@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{% if book %}Editar Libro{% else %}Agregar Nuevo Libro{% endif %}{% endblock %}
+{% block content %}
+<h2 class="mb-4">{% if book %}Editar Libro{% else %}Agregar Nuevo Libro{% endif %}</h2>
+<form method="POST" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="title" class="form-label">Título</label>
+    <input type="text" class="form-control" name="title" id="title" value="{{ book.title if book else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="author" class="form-label">Autor</label>
+    <input type="text" class="form-control" name="author" id="author" value="{{ book.author if book else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="year" class="form-label">Año</label>
+    <input type="number" class="form-control" name="year" id="year" value="{{ book.year if book else '' }}">
+  </div>
+  <div class="mb-3">
+    <label for="language" class="form-label">Idioma</label>
+    <input type="text" class="form-control" name="language" id="language" value="{{ book.language if book else '' }}">
+  </div>
+  <div class="mb-3">
+    <label for="subject" class="form-label">Tema</label>
+    <input type="text" class="form-control" name="subject" id="subject" value="{{ book.subject if book else '' }}">
+  </div>
+  <div class="mb-3">
+    <label for="cover_url" class="form-label">URL de Portada</label>
+    <input type="text" class="form-control" name="cover_url" id="cover_url" value="{{ book.cover_url if book else '' }}">
+  </div>
+  <div class="mb-3">
+    <label for="epub_file" class="form-label">Archivo EPUB</label>
+    <input type="file" class="form-control" name="epub_file" id="epub_file">
+  </div>
+  <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+{% endblock %}
