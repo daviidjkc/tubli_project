@@ -106,10 +106,10 @@ footer {
     color: #fff;
     text-align: center;
     padding: 10px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
+    margin-top: 20px; /* Espacio entre el contenido y el footer */
     box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* Elimina la posición fija */
+    width: 100%;
 }
 
 footer a {
@@ -157,4 +157,36 @@ form button {
     .nav-link {
         font-size: 0.9rem;
     }
+}
+
+/* Cambiar el color de fondo y el texto de los botones de paginación */
+.pagination .page-link {
+    background-color: #a6e292; /* Color de fondo */
+    color: #343a40; /* Color del texto */
+    border: 1px solid #dee2e6; /* Borde */
+}
+
+.pagination .page-link:hover {
+    background-color: #343a40; /* Fondo al pasar el mouse */
+    color: #ffffff; /* Texto al pasar el mouse */
+}
+
+/* Estilo para el botón activo */
+.pagination .page-item.active .page-link {
+    background-color: #00ff1a; /* Fondo del botón activo */
+    color: #ffffff; /* Texto del botón activo */
+    border-color: #54c059; /* Borde del botón activo */
+}
+
+/* Deshabilitar botones */
+.pagination .page-item.disabled .page-link {
+    background-color: #b1ea9d; /* Fondo del botón deshabilitado */
+    color: #6c757d; /* Texto del botón deshabilitado */
+    border-color: #9adf92; /* Borde del botón deshabilitado */
+}
+
+.pagination {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    margin-top: 20px; /* Espaciado superior opcional */
 }
