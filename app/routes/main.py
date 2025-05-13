@@ -1,17 +1,31 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, send_file, redirect, url_for, flash
 from app.models import Book
+import requests
+import tempfile
+import os
+import io
+from sqlalchemy import case
 
 main_bp = Blueprint('main', __name__)
 
+CLOUDCONVERT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiYjFiNjg1YTBiZGRmMjVkODNiMmMzMDI2ZDQ2OGVjMzExNTFmZDY2OTAyMTQ4MzY3NDY5MWM5NjA3OGQzYmY1N2RhNTNhNmNlNWFkYzk4ZjQiLCJpYXQiOjE3NDcxMjcwNTcuODgzMDk1LCJuYmYiOjE3NDcxMjcwNTcuODgzMDk2LCJleHAiOjQ5MDI4MDA2NTcuODc5NjM1LCJzdWIiOiI3MTkxMDQ3OCIsInNjb3BlcyI6WyJ0YXNrLndyaXRlIiwidGFzay5yZWFkIl19.agMpzHyxC4Qbn3LMdCUqJ8DgqUefxNWrETqzPvnDVZxBDLnUzyGFfdySvzlldplG5ZhTx2sCR3ZeeR3J-DRpVeVQglfzZtMGfzNZaaZMwBksCsXeyrxrYsOh4-igJxcKtchcFkim0X_2ajZBUJv-hxoo7_DmIENphEkJRZmM-fLuENmE23wot16tiBbn3FrRBS9ZUzT_k5wgWQcQx0_o5FCQiW1a3lAXcBKHQe3oBHlfaTHwCecixLejlkNmFafHBS9nxj9WqLcO0Fxt-QuSbrMTq9_Jvv9UpZrhzzxgGSrEJ_OAlFmg7BvZ8_Qj9rEMs47vDXOIX1dN_E10_2gJ1zh3nf62eTtGPQ3FuAXsD-jFEdXbTbC6td3hItzveGBUC59v2TKdACnXE0DErYAaOBltEWuz4niDj4SyRv7T1lf6_p9lzAegRXfOTzrzpc7ZW2U9NOe8xFVj-bCI2yzh7nKfR24yfT4kP7P9RqSe57rDehetZ4CNZqKZ3O8iwu5kVwSx5evggLg0gJ8651Nw6foxOA2pwkh0T7qm39nS2hW6wD7rl6ZdeaOy5oDr-e-iiTJdogzq91Q7lAztjiAEpNcSd_rPaV79O8N8XfY5903VcubTxzpakWjQVBiKI8FXRJoQfHAnIN0cX0hnHcl03Se91g-_xaD9DqfUDyLX7MI"  
+
+
 @main_bp.route('/')
 def index():
-    # Obtener el número de página actual desde los parámetros de la URL
     page = request.args.get('page', 1, type=int)
-    per_page = 12  # Mostrar 12 libros por página
+    per_page = 12
 
-    # Consulta con paginación
-    pagination = Book.query.paginate(page=page, per_page=per_page)
-    books = pagination.items  # Libros de la página actual
+    # Ordena: primero los que tienen cover_url, luego los que no
+    pagination = Book.query.order_by(
+        case(
+            (Book.cover_url == None, 1),
+            (Book.cover_url == '', 1),
+            else_=0
+        ),
+        Book.id
+    ).paginate(page=page, per_page=per_page)
+    books = pagination.items
 
     return render_template('index.html', books=books, pagination=pagination)
 
@@ -27,4 +41,79 @@ def count_books():
         return jsonify({'total_books': book_count}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@main_bp.route('/convert_epub_to_pdf/<int:book_id>', methods=['POST'])
+def convert_epub_to_pdf(book_id):
+    book = Book.query.get_or_404(book_id)
+    epub_url = book.file_url
+
+    # Descarga el archivo EPUB temporalmente
+    epub_response = requests.get(epub_url)
+    if epub_response.status_code != 200:
+        flash('No se pudo descargar el archivo EPUB.', 'danger')
+        return redirect(url_for('main.book_detail', book_id=book_id))
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.epub') as epub_file:
+        epub_file.write(epub_response.content)
+        epub_file_path = epub_file.name
+
+    headers = {"Authorization": f"Bearer {CLOUDCONVERT_API_KEY}"}
+
+    # 1. Crear el job con import/upload, convert y export/url
+    job_payload = {
+        "tasks": {
+            "import-1": {
+                "operation": "import/upload"
+            },
+            "convert-1": {
+                "operation": "convert",
+                "input": "import-1",
+                "input_format": "epub",
+                "output_format": "pdf"
+            },
+            "export-1": {
+                "operation": "export/url",
+                "input": "convert-1"
+            }
+        }
+    }
+    job_response = requests.post("https://api.cloudconvert.com/v2/jobs", headers=headers, json=job_payload)
+    job_data = job_response.json()
+    import_task = next(task for task in job_data["data"]["tasks"] if task["name"] == "import-1")
+    upload_url = import_task["result"]["form"]["url"]
+    upload_params = import_task["result"]["form"]["parameters"]
+
+    # 2. Subir el archivo EPUB a la URL proporcionada
+    with open(epub_file_path, "rb") as f:
+        files = {'file': (os.path.basename(epub_file_path), f)}
+        requests.post(upload_url, data=upload_params, files=files)
+
+    os.remove(epub_file_path)
+
+    # 3. Esperar a que el job termine y obtener el enlace al PDF
+    import time
+    job_id = job_data["data"]["id"]
+    pdf_url = None
+    for _ in range(30):  # Espera hasta 30 segundos
+        status_response = requests.get(f"https://api.cloudconvert.com/v2/jobs/{job_id}", headers=headers)
+        status_data = status_response.json()
+        if status_data["data"]["status"] == "finished":
+            for task in status_data["data"]["tasks"]:
+                if task["name"] == "export-1" and "result" in task and "files" in task["result"]:
+                    pdf_url = task["result"]["files"][0]["url"]
+                    break
+            break
+        time.sleep(1)
+
+    if pdf_url:
+        pdf_response = requests.get(pdf_url)
+        return send_file(
+            io.BytesIO(pdf_response.content),
+            mimetype='application/pdf',
+            as_attachment=True,
+            download_name=f"{book.title}.pdf"
+        )
+    else:
+        flash('No se pudo convertir el archivo a PDF.', 'danger')
+        return redirect(url_for('main.book_detail', book_id=book_id))
 

@@ -12,11 +12,20 @@
   <div class="col-md-8">
     <h2>{{ book.title }}</h2>
     <p><strong>Autor:</strong> {{ book.author }}</p>
-    <p><strong>Año:</strong> {{ book.year }}</p>
+    <p><strong>Año:</strong> {{ book.year if book.year else 'Desconocido' }}</p>
     <p><strong>Idioma:</strong> {{ book.language }}</p>
     <p><strong>Tema:</strong> {{ book.subject }}</p>
+    {% if book.summary %}
+      <p><strong>Resumen:</strong> {{ book.summary }}</p>
+    {% endif %}
+    {% if book.download_count %}
+      <p><strong>Descargas:</strong> {{ book.download_count }}</p>
+    {% endif %}
     {% if book.file_url %}
-      <a href="{{ book.file_url }}" class="btn btn-success" target="_blank">Descargar / Abrir</a>
+      <a href="{{ book.file_url }}" class="btn btn-success mb-2" download>Descargar EPUB</a>
+      <form action="{{ url_for('main.convert_epub_to_pdf', book_id=book.id) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-warning mb-2">Descargar en PDF</button>
+      </form>
     {% endif %}
   </div>
 </div>
