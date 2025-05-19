@@ -12,7 +12,7 @@
   <div class="col-md-8">
     <h2>{{ book.title }}</h2>
     <p><strong>Autor:</strong> {{ book.author }}</p>
-    <p><strong>Año:</strong> {{ book.year if book.year else 'Desconocido' }}</p>
+    <p><strong>Año:</strong> {{ book.year if book.year is not none else 'Desconocido' }}</p>
     <p><strong>Idioma:</strong> {{ book.language }}</p>
     <p><strong>Tema:</strong> {{ book.subject }}</p>
     {% if book.summary %}
