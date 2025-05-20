@@ -137,6 +137,36 @@ body {
     color: #fff !important;
 }
 
+.btn-agregar-libro {
+  background-color: #724747;
+  border-color: #4d2c2c;
+  color: #fff;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 8px rgba(50, 20, 20, 0.15);
+  transition: background 0.2s, border 0.2s;
+}
+
+.btn-agregar-libro:hover {
+  background-color: #a39570;
+  border-color: #a39570;
+  color: #311414;
+}
+
+.btn-clear-search {
+  font-size: 1.2rem;
+  line-height: 1;
+  border: none;
+  background: transparent;
+  color: #888;
+  cursor: pointer;
+}
+
+.btn-clear-search:hover {
+  color: #d33;
+  background: #eee;
+}
+
 /* Footer */
 footer {
     background-color: #3e2723; /* Igual que el navbar */
@@ -232,4 +262,21 @@ form button {
 /* Margen superior para las tarjetas */
 .cards-margin-top {
     margin-top: 6rem;
+}
+
+
+.custom-modal-dialog {
+  max-width: 900px;   /* Cambia el ancho máximo */
+  width: 50%;    
+
+}
+.custom-modal-dialog .modal-content {
+  background-color: #281c1caa;
+  border-radius: 12px;
+  min-height: 400px;   /* Ajusta la altura mínima */
+  color: #ad6060;  
+  height: 100vh;       /* O el valor que prefieras */
+  max-height: 80vh;   /* Usa unidades relativas a la ventana */
+  overflow-y: auto;   /* Permite scroll si el contenido es muy grande */
+  margin-top: 10rem;
 }

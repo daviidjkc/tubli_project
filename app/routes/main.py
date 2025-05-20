@@ -4,7 +4,9 @@ import requests
 import tempfile
 import os
 import io
-from sqlalchemy import case
+from sqlalchemy import case, or_
+from flask_login import login_required, current_user
+from werkzeug.utils import secure_filename
 
 main_bp = Blueprint('main', __name__)
 
@@ -15,9 +17,20 @@ CLOUDCONVERT_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianR
 def index():
     page = request.args.get('page', 1, type=int)
     per_page = 12
+    search_query = request.args.get('q', '').strip()
 
-    # Ordena: primero los que tienen cover_url, luego los que no
-    pagination = Book.query.order_by(
+    query = Book.query
+
+    if search_query:
+        query = query.filter(
+            or_(
+                Book.title.ilike(f'%{search_query}%'),
+                Book.author.ilike(f'%{search_query}%'),
+                Book.subject.ilike(f'%{search_query}%')
+            )
+        )
+
+    pagination = query.order_by(
         case(
             (Book.cover_url == None, 1),
             (Book.cover_url == '', 1),
@@ -116,4 +129,53 @@ def convert_epub_to_pdf(book_id):
     else:
         flash('No se pudo convertir el archivo a PDF.', 'danger')
         return redirect(url_for('main.book_detail', book_id=book_id))
+
+@main_bp.route('/add_book', methods=['POST'])
+@login_required
+def add_book():
+    title = request.form.get('title')
+    author = request.form.get('author')
+    year = request.form.get('year')
+    language = request.form.get('language')
+    subject = request.form.get('subject')
+    summary = request.form.get('summary')
+    cover_url = request.form.get('cover_url')
+    cover_file = request.files.get('cover_file')
+    epub_file = request.files.get('epub_file')
+
+    # Crear carpeta uploads si no existe
+    upload_folder = os.path.join(os.getcwd(), 'static', 'uploads')
+    if not os.path.exists(upload_folder):
+        os.makedirs(upload_folder)
+
+    # Guardar portada si es archivo
+    if cover_file and cover_file.filename:
+        filename = secure_filename(cover_file.filename)
+        cover_path = os.path.join('static', 'uploads', filename)
+        cover_file.save(os.path.join(os.getcwd(), cover_path))
+        cover_url = url_for('static', filename=f'uploads/{filename}')
+
+    # Guardar EPUB
+    epub_url = None
+    if epub_file and epub_file.filename:
+        epub_filename = secure_filename(epub_file.filename)
+        epub_path = os.path.join('static', 'uploads', epub_filename)
+        epub_file.save(os.path.join(os.getcwd(), epub_path))
+        epub_url = url_for('static', filename=f'uploads/{epub_filename}')
+
+    new_book = Book(
+        title=title,
+        author=author,
+        year=year if year else None,
+        language=language,
+        subject=subject,
+        summary=summary,
+        cover_url=cover_url,
+        file_url=epub_url
+    )
+    from app import db
+    db.session.add(new_book)
+    db.session.commit()
+    flash('Libro agregado correctamente.', 'success')
+    return redirect(url_for('main.index'))
 

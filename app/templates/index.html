@@ -1,11 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Inicio - Biblioteca Virtual{% endblock %}
+{% block title %}TUBLI {% endblock %}
 {% block content %}
   <h1 class="mb-4">Catálogo de Libros</h1>
   <form class="d-flex mb-4" method="GET" action="{{ url_for('main.index') }}">
-    <input class="form-control me-2" type="search" placeholder="Buscar por título, autor o tema" name="q">
+    <input class="form-control me-2" type="search" placeholder="Buscar por título, autor o tema" name="q" value="{{ request.args.get('q', '') }}">
     <button class="btn btn-outline-success" type="submit">Buscar</button>
   </form>
+  {% if current_user.is_authenticated %}
+    <button class="btn btn-primary mb-4 btn-agregar-libro" data-bs-toggle="modal" data-bs-target="#addBookModal">
+      Agregar libro
+    </button>
+  {% endif %}
   <div class="row cards-margin-top">
     {% if books %}
       {% for book in books %}
@@ -75,4 +80,55 @@
       {% endif %}
     </ul>
   </nav>
+
+  {% if current_user.is_authenticated %}
+  <div class="modal fade" id="addBookModal" tabindex="-1" aria-labelledby="addBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg custom-modal-dialog">
+      <form class="modal-content" method="POST" action="{{ url_for('main.add_book') }}" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addBookModalLabel">Agrega tu libro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Título</label>
+            <input type="text" class="form-control" name="title" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Autor</label>
+            <input type="text" class="form-control" name="author" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Año</label>
+            <input type="number" class="form-control" name="year">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Idioma</label>
+            <input type="text" class="form-control" name="language">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tema</label>
+            <input type="text" class="form-control" name="subject">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Resumen</label>
+            <textarea class="form-control" name="summary"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Portada (URL o archivo)</label>
+            <input type="file" class="form-control" name="cover_file">
+            <input type="text" class="form-control mt-2" name="cover_url" placeholder="o pega una URL de imagen">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Archivo EPUB</label>
+            <input type="file" class="form-control" name="epub_file" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar libro</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% endif %}
 {% endblock %}
