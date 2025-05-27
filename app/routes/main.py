@@ -171,11 +171,18 @@ def add_book():
         subject=subject,
         summary=summary,
         cover_url=cover_url,
-        file_url=epub_url
+        file_url=epub_url,
+        user_id=current_user.id   # <-- ¡AQUÍ!
     )
     from app import db
     db.session.add(new_book)
     db.session.commit()
     flash('Libro agregado correctamente.', 'success')
     return redirect(url_for('main.index'))
+
+@main_bp.route('/mis-libros')
+@login_required
+def mis_libros():
+    libros = Book.query.filter_by(user_id=current_user.id).all()
+    return render_template('mis_libros.html', libros=libros)
 

@@ -3,7 +3,8 @@
 {% block content %}
   <h1 class="mb-4">Catálogo de Libros</h1>
   <form class="d-flex mb-4" method="GET" action="{{ url_for('main.index') }}">
-    <input class="form-control me-2" type="search" placeholder="Buscar por título, autor o tema" name="q" value="{{ request.args.get('q', '') }}">
+    <input class="form-control me-2" type="search" placeholder="Buscar por título, autor o tema" name="q"
+      value="{% if not request.args.get('from_cat') %}{{ request.args.get('q', '') }}{% endif %}">
     <button class="btn btn-outline-success" type="submit">Buscar</button>
   </form>
   {% if current_user.is_authenticated %}

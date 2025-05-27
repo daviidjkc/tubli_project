@@ -14,24 +14,25 @@
       <div class="container">
         <a class="navbar-brand" href="{{ url_for('main.index') }}">
           <img src="{{ url_for('static', filename='img/tubli_logo.png') }}" alt="Logo" width="80" height="60" class="d-inline-block align-text-top">
-          
         </a>
-        <!-- Botón Categorías para navbar Bootstrap 5 -->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="categoriasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <!-- Otros enlaces si los tienes -->
+        </ul>
+        <div class="ms-auto d-flex align-items-center">
+          <!-- Botón Categorías a la derecha con más margen -->
+          <div class="dropdown me-5">
+            <a class="nav-link dropdown-toggle text-light" href="#" id="categoriasDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Categorías
             </a>
             <ul class="dropdown-menu" aria-labelledby="categoriasDropdown">
-              <li><a class="dropdown-item" href="/categoria/aventura">Aventura</a></li>
-              <li><a class="dropdown-item" href="/categoria/romance">Romance</a></li>
-              <li><a class="dropdown-item" href="/categoria/ciencia-ficcion">Ciencia Ficción</a></li>
-              <li><a class="dropdown-item" href="/categoria/poesia">Poesía</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.index', q='Adventure', from_cat=1) }}">Aventura</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.index', q='Romance', from_cat=1) }}">Romance</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.index', q='science fiction', from_cat=1) }}">Ciencia Ficción</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.index', q='Poetry', from_cat=1) }}">Poesía</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.index', q='History', from_cat=1) }}">Historia</a></li>
               <!-- Agrega más categorías según tus datos -->
             </ul>
-          </li>
-        </ul>
-        <div class="ms-auto">
+          </div>
           {% if current_user.is_authenticated %}
           <div class="dropdown">
             <a class="nav-link dropdown-toggle p-0" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,6 +41,7 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li><h6 class="dropdown-header">{{ current_user.username }}</h6></li>
               <li><a class="dropdown-item" href="#">Configuración</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('main.mis_libros') }}">Mis Libros</a></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <form method="POST" action="{{ url_for('auth.logout') }}">

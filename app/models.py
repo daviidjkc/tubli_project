@@ -19,6 +19,7 @@ class Book(db.Model):
     summary = db.Column(db.Text)
     download_count = db.Column(db.Integer)
     formats = db.Column(db.Text)  # NUEVO: guarda el dict de formatos como JSON
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # NUEVO: referencia al usuario
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -27,6 +28,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String(20), default='user')  # 'user' o 'admin'
+    books = db.relationship('Book', backref='user', lazy=True)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -38,6 +40,8 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     from app.models import User
     return User.query.get(int(user_id))
+
+
 
 
 

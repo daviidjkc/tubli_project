@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Mis Libros Subidos</h2>
+  {% if libros %}
+    <ul>
+      {% for libro in libros %}
+        <li>
+          <a href="{{ url_for('main.book_detail', book_id=libro.id) }}">
+            {{ libro.title }}
+          </a>
+          - {{ libro.author }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No has subido ningún libro todavía.</p>
+  {% endif %}
+{% endblock %}
