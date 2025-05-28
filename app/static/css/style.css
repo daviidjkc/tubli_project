@@ -42,6 +42,38 @@ body {
     color: #a56868; /* Azul de Bootstrap */
 }
 
+/* Mantener navbar y dropdowns SIEMPRE marrón oscuro y texto blanco */
+.navbar, .navbar-dark, .bg-dark {
+    background-color: #3e2723 !important;
+}
+
+.navbar .dropdown-menu {
+    background-color: #3e2723 !important;
+    color: #fff !important;
+    border: none;
+}
+
+.navbar .dropdown-item {
+    color: #fff !important;
+}
+
+.navbar .dropdown-item:hover, .navbar .dropdown-item:focus {
+    background-color: #4e2e1e !important;
+    color: #fff !important;
+}
+
+/* Asegura que los iconos y textos del usuario también sean blancos */
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .dropdown-toggle {
+    color: #fff !important;
+}
+
+/* No aplicar fondo oscuro a .container dentro del navbar */
+.navbar .container, .navbar .container-fluid {
+    background: transparent !important;
+}
+
 /* Catálogo de Libros */
 .card {
     border: none;
@@ -279,4 +311,108 @@ form button {
   max-height: 80vh;   /* Usa unidades relativas a la ventana */
   overflow-y: auto;   /* Permite scroll si el contenido es muy grande */
   margin-top: 10rem;
+}
+
+/* Estilos para el modo oscuro */
+body.dark-mode {
+    background-color: #181a1b !important;
+    color: #f1f1f1 !important;
+    
+}
+body.dark-mode .container {
+    background-color: #23272b !important;
+}
+body.dark-mode .card,
+body.dark-mode .dropdown-menu,
+body.dark-mode .modal-content {
+    background-color: #23272b !important;
+    color: #f1f1f1 !important;
+}
+/* El navbar NO cambia en modo oscuro */
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #23272b !important;
+    color: #f1f1f1 !important;
+    border-color: #444;
+}
+body.dark-mode .list-group-item {
+    background-color: #23272b !important;
+    color: #f1f1f1 !important;
+}
+body.dark-mode .btn-outline-primary {
+    color: #f1f1f1;
+    border-color: #f1f1f1;
+}
+body.dark-mode .btn-outline-primary:hover {
+    background-color: #f1f1f1;
+    color: #23272b;
+}
+body.dark-mode .card {
+    background-color: #2d1f14 !important;
+    color: #f1f1f1 !important;
+}
+body.dark-mode .card-title,
+body.dark-mode .card-text {
+    color: #f1f1f1 !important;
+}
+
+.bg-brown-dark {
+    background-color: #3e2723 !important;
+}
+.theme-preview {
+    height: 60px;
+}
+.bg-sepia {
+    background-color: #f4ecd8;
+}
+.nav-tabs .nav-link.active {
+    font-weight: 600;
+}
+.form-range::-webkit-slider-thumb {
+    background: #2e1c1c;
+}
+.theme-option {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.theme-option:hover {
+    transform: scale(1.05);
+}
+
+/* Marrón oscuro personalizado para cards de configuración */
+.bg-brown-dark {
+    background-color: #3e2723 !important;
+    color: #fff !important;
+}
+.bg-brown-dark .list-group-item {
+    background-color: #3e2723 !important;
+    color: #fff !important;
+    border: none;
+}
+.bg-brown-dark .list-group-item.active,
+.bg-brown-dark .list-group-item:active {
+    background-color: #4e2e1e !important;
+    color: #fff !important;
+    border: none;
+}
+
+@media (min-width: 768px) {
+  .config-sidebar {
+    position: sticky;
+    top: 30px;
+    z-index: 2;
+  }
+}
+
+/* Solo elimina el margen inferior en el h6 de Cambiar Contraseña */
+.no-margin-bottom {
+    margin-bottom: 4px !important;
+}
+
+#seguridad .card-title.no-margin-bottom {
+    margin-bottom: 4px !important;
+}
+
+card-security{
+    margin-bottom: 5px;
 }

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% block title %}Configuración - TUBLI{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row h-100">
+    <div class="col-md-3 align-self-start">
+      <div class="card bg-brown-dark text-white h-100">
+        <!-- Opcional: header de la card -->
+        <div class="card-header bg-brown-dark text-white">
+          <h5 class="mb-0">Configuración</h5>
+        </div>
+        <div class="card-body p-0">
+          <div class="list-group list-group-flush">
+            <a href="#perfil" class="list-group-item list-group-item-action active" data-bs-toggle="tab">
+              <i class="bi bi-person-fill me-2"></i>Perfil
+            </a>
+            <a href="#seguridad" class="list-group-item list-group-item-action" data-bs-toggle="tab">
+              <i class="bi bi-shield-lock me-2"></i>Seguridad
+            </a>
+            <a href="#preferencias" class="list-group-item list-group-item-action" data-bs-toggle="tab">
+              <i class="bi bi-sliders me-2"></i>Preferencias
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9">
+      <div class="card">
+        <div class="card-header bg-brown-dark text-white">
+          <h4 class="mb-0">Configuración de Usuario</h4>
+        </div>
+        
+        <div class="card-body">
+          <div class="tab-content">
+            <!-- Pestaña de Perfil -->
+            <div class="tab-pane fade show active" id="perfil">
+              <h5 class="mb-4">Información del Perfil</h5>
+              <form>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ current_user.username }}">
+                    <div class="invalid-feedback">
+                      El nombre de usuario ya existe.
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="email" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="email" value="{{ current_user.email }}">
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="bio" class="form-label">Biografía</label>
+                  <textarea class="form-control" id="bio" rows="3" placeholder="Cuéntanos algo sobre ti..."></textarea>
+                </div>
+                
+                <div class="mb-4">
+                  <label class="form-label">Foto de Perfil</label>
+                  <div class="d-flex align-items-center">
+                    <img src="{{ url_for('static', filename='img/user_icon.png') }}" alt="Foto de perfil" class="rounded-circle me-3" width="80" height="80">
+                    <div>
+                      <input type="file" class="form-control" id="fotoPerfil">
+                      <div class="form-text">Formatos aceptados: JPG, PNG. Máx. 2MB</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </form>
+            </div>
+            
+            <!-- Pestaña de Cuenta -->
+            
+            
+            <!-- Pestaña de Seguridad -->
+            <div class="tab-pane fade" id="seguridad">
+              <h5 class="mb-4">Seguridad y Privacidad</h5>
+              
+              <div class="mb-1">
+                <div class="card-security">
+                  <h6 class="card-title mb-2 no-margin-bottom">Cambiar Contraseña</h6>
+                  <form>
+                    <div class="mb-3">
+                      <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                      <input type="password" class="form-control" id="currentPassword">
+                    </div>
+                    <div class="mb-3">
+                      <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                      <input type="password" class="form-control" id="newPassword">
+                    </div>
+                    <div class="mb-3">
+                      <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                      <input type="password" class="form-control" id="confirmPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cambiar Contraseña</button>
+                  </form>
+                </div>
+              </div>
+              </div>
+            
+            
+            <!-- Pestaña de Preferencias -->
+            <div class="tab-pane fade" id="preferencias">
+              <h5 class="mb-4">Preferencias de Lectura</h5>
+              
+              <div class="mb-4">
+                <label class="form-label">Tamaño de Fuente</label>
+                <div class="d-flex align-items-center">
+                  <span class="me-2">A</span>
+                  <input type="range" class="form-range" min="12" max="24" step="1" id="fontSize" style="width: 60%">
+                  <span class="ms-2">A</span>
+                  <span class="ms-3" id="fontSizeValue">16px</span>
+                </div>
+              </div>
+              
+              <div class="mb-4">
+                <label class="form-label">Tema de Lectura</label>
+                <div class="row">
+                  <div class="col-md-3 mb-3">
+                    <div class="theme-option bg-light p-3 rounded text-center" data-theme="light">
+                      <div class="theme-preview bg-white p-2 mb-2 border">Claro</div>
+                      <button class="btn btn-sm btn-outline-primary">Seleccionar</button>
+                    </div>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <div class="theme-option bg-dark p-3 rounded text-center" data-theme="dark">
+                      <div class="theme-preview bg-black p-2 mb-2 border">Oscuro</div>
+                      <button class="btn btn-sm btn-outline-primary">Seleccionar</button>
+                    </div>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    
+                  </div>
+                </div>
+              </div>
+              <br><br>
+           
+              <!-- <button type="submit" class="btn btn-primary mt-4">Guardar Configuración</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para confirmar cambios -->
+<div class="modal fade" id="confirmChangesModal" tabindex="-1" aria-labelledby="confirmChangesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmChangesModalLabel">Confirmar Cambios</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas guardar los cambios realizados en tu configuración?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  // Actualizar el valor del tamaño de fuente
+  document.getElementById('fontSize').addEventListener('input', function() {
+    document.getElementById('fontSizeValue').textContent = this.value + 'px';
+  });
+
+  // Manejar la selección de temas
+  document.querySelectorAll('.theme-option button').forEach(button => {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      const theme = this.closest('.theme-option').dataset.theme;
+      if (theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('darkMode', '1');
+      } else if (theme === 'light') {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('darkMode', '0');
+      }
+    });
+  });
+
+  // Al cargar la página, aplica el modo oscuro si estaba activado
+  document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('darkMode') === '1') {
+      document.body.classList.add('dark-mode');
+    }
+  });
+
+  // Validar nombre de usuario al cambiar el input
+  document.getElementById('nombre').addEventListener('blur', function() {
+    const nombre = this.value;
+    fetch('/check_username', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({username: nombre})
+    })
+    .then(res => res.json())
+    .then(data => {
+      const nombreInput = document.getElementById('nombre');
+      if (data.exists && nombre !== "{{ current_user.username }}") {
+        nombreInput.classList.add('is-invalid');
+        nombreInput.setCustomValidity('El nombre de usuario ya existe.');
+      } else {
+        nombreInput.classList.remove('is-invalid');
+        nombreInput.setCustomValidity('');
+      }
+    });
+  });
+
+  // Guardar cambios del perfil
+  document.querySelector('#perfil form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    fetch('/update_profile', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        // Opcional: Actualiza el nombre mostrado en la interfaz
+      } else {
+        alert(data.message);
+      }
+    });
+  });
+</script>
+{% endblock %}

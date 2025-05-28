@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, send_file, redirect, url_for, flash
-from app.models import Book
+from app.models import Book, User
 import requests
 import tempfile
 import os
@@ -7,6 +7,7 @@ import io
 from sqlalchemy import case, or_
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
+from app import db
 
 main_bp = Blueprint('main', __name__)
 
@@ -185,4 +186,32 @@ def add_book():
 def mis_libros():
     libros = Book.query.filter_by(user_id=current_user.id).all()
     return render_template('mis_libros.html', libros=libros)
+
+@main_bp.route('/configuracion')
+@login_required
+def configuracion():
+    return render_template('configuracion.html')
+
+@main_bp.route('/check_username', methods=['POST'])
+def check_username():
+    username = request.json.get('username')
+    user = User.query.filter_by(username=username).first()
+    exists = user is not None
+    return jsonify({'exists': exists})
+
+@main_bp.route('/update_profile', methods=['POST'])
+@login_required
+def update_profile():
+    username = request.form.get('nombre')
+    email = request.form.get('email')
+    bio = request.form.get('bio')
+    # Verifica si el nombre ya existe y no es el del usuario actual
+    if username != current_user.username:
+        if User.query.filter_by(username=username).first():
+            return jsonify({'success': False, 'message': 'El nombre de usuario ya existe.'})
+    current_user.username = username
+    current_user.email = email
+    current_user.bio = bio
+    db.session.commit()
+    return jsonify({'success': True, 'message': '¡Tu nombre ha sido cambiado exitosamente!'})
 
