@@ -10,7 +10,20 @@
     {% endif %}
   </div>
   <div class="col-md-8">
-    <h2>{{ book.title }}</h2>
+    <h2>
+      {{ book.title }}
+      {% if current_user.is_authenticated %}
+        <form method="POST" action="{{ url_for('main.toggle_favorito', book_id=book.id) }}" style="display:inline;" class="fav-form" data-book-id="{{ book.id }}">
+          <button type="submit" class="btn btn-fav" title="Favorito">
+            {% if book in current_user.favorites %}
+              <i class="bi bi-heart-fill text-danger"></i>
+            {% else %}
+              <i class="bi bi-heart text-brown"></i>
+            {% endif %}
+          </button>
+        </form>
+      {% endif %}
+    </h2>
     <p><strong>Autor:</strong> {{ book.author }}</p>
     <p><strong>Año:</strong> {{ book.year if book.year is not none else 'Desconocido' }}</p>
     <p><strong>Idioma:</strong> {{ book.language }}</p>
@@ -29,4 +42,24 @@
     {% endif %}
   </div>
 </div>
+<script>
+document.querySelectorAll('.fav-form').forEach(form => {
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const bookId = this.getAttribute('data-book-id');
+    fetch(`/toggle_favorito/${bookId}`, {
+      method: 'POST',
+      headers: {'X-Requested-With': 'XMLHttpRequest'}
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.status === 'added') {
+        this.querySelector('i').className = 'bi bi-heart-fill text-danger';
+      } else if (data.status === 'removed') {
+        this.querySelector('i').className = 'bi bi-heart text-brown';
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

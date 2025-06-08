@@ -215,3 +215,24 @@ def update_profile():
     db.session.commit()
     return jsonify({'success': True, 'message': '¡Tu nombre ha sido cambiado exitosamente!'})
 
+@main_bp.route('/favoritos')
+@login_required
+def favoritos():
+    return render_template('favoritos.html', favoritos=current_user.favorites)
+
+@main_bp.route('/toggle_favorito/<int:book_id>', methods=['POST'])
+@login_required
+def toggle_favorito(book_id):
+    book = Book.query.get_or_404(book_id)
+    if book in current_user.favorites:
+        current_user.favorites.remove(book)
+        db.session.commit()
+        status = 'removed'
+    else:
+        current_user.favorites.append(book)
+        db.session.commit()
+        status = 'added'
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return jsonify({'status': status})
+    return redirect(request.referrer or url_for('main.index'))
+

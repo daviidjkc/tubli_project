@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2 class="mb-4">Mis Favoritos</h2>
+  {% if favoritos %}
+    <div class="row cards-margin-top">
+      {% for book in favoritos %}
+        <div class="col-md-3 mb-4">
+          <div class="card h-100">
+            {% if book.cover_url %}
+              <img src="{{ book.cover_url }}" class="card-img-top" alt="{{ book.title }}">
+            {% else %}
+              <img src="{{ url_for('static', filename='img/default_cover.jpg') }}" class="card-img-top" alt="{{ book.title }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ book.title }}</h5>
+              <p class="card-text">{{ book.author }}</p>
+              <div class="d-flex align-items-center">
+                <a href="{{ url_for('main.book_detail', book_id=book.id) }}" class="btn btn-ver-detalles me-2">Ver Detalles</a>
+                <form method="POST" action="{{ url_for('main.toggle_favorito', book_id=book.id) }}" style="display:inline;" class="fav-form" data-book-id="{{ book.id }}">
+                  <button type="submit" class="btn btn-fav" title="Quitar de favoritos">
+                    <i class="bi bi-heart-fill text-danger"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No tienes libros favoritos aún.</p>
+  {% endif %}
+  <script>
+  document.querySelectorAll('.fav-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const bookId = this.getAttribute('data-book-id');
+      fetch(`/toggle_favorito/${bookId}`, {
+        method: 'POST',
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'removed') {
+          // Elimina la tarjeta del DOM
+          this.closest('.col-md-3').remove();
+        }
+      });
+    });
+  });
+  </script>
+{% endblock %}

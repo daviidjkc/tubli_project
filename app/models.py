@@ -3,6 +3,12 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
+favorites = db.Table(
+    'favorites',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('book_id', db.Integer, db.ForeignKey('books.id'))
+)
+
 class Book(db.Model):
     __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
@@ -29,6 +35,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     role = db.Column(db.String(20), default='user')  # 'user' o 'admin'
     books = db.relationship('Book', backref='user', lazy=True)
+    favorites = db.relationship('Book', secondary=favorites, backref='favorited_by')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

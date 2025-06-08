@@ -157,6 +157,18 @@ body {
     transform: scale(1.05);
 }
 
+.btn-fav{
+    background-color: #c5b58d !important;
+    color: #000000 !important;
+    border: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.btn-fav:hover {
+    background-color: #1a242f !important;
+    color: #fff !important;
+    transform: scale(1.05);
+}
+
 .btn-outline-success {
     color: #000000 !important;
     background-color: #c5b58d  !important; /* Cambia aquí el color de fondo */
