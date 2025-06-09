@@ -87,6 +87,9 @@ body {
     margin-bottom: 20px; /* Espacio entre las tarjetas */
     background-color: #a0512dd5; /* Nuevo color de fondo para las tarjetas */
     color: #ffffff;
+    min-height: 350px;
+    max-height: none;
+    height: auto !important;
 }
 
 .card:hover {
@@ -116,6 +119,12 @@ body {
     white-space: nowrap; /* Evita que el texto ocupe varias líneas */
     overflow: hidden; /* Oculta el texto que excede el ancho del contenedor */
     text-overflow: ellipsis; /* Agrega puntos suspensivos al final del texto recortado */
+}
+
+.card-title, .card-text {
+  white-space: normal !important;     /* Permite saltos de línea */
+  overflow-wrap: break-word !important; /* Rompe palabras largas si es necesario */
+  word-break: break-word !important;    /* Rompe palabras largas */
 }
 
 .card-text {
@@ -430,13 +439,11 @@ card-security{
 }
 
 .btn-brown {
-  color: #4e2e1e !important;
-  text-decoration: underline;
+  color: #fff !important;
   font-weight: 500;
   transition: color 0.2s;
 }
 
-.btn-brown:hover {
-  color: #ad6060 !important;
-  text-decoration: underline;
+.btn-sm{
+    color: #fff;
 }

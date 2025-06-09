@@ -132,5 +132,21 @@ footer {
         });
       });
     </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedSize = localStorage.getItem('fontSize');
+  if (savedSize) {
+    document.body.style.fontSize = savedSize;
+    const fontSizeInput = document.getElementById('fontSize');
+    const fontSizeValue = document.getElementById('fontSizeValue');
+    if (fontSizeInput) {
+      fontSizeInput.value = parseInt(savedSize);
+    }
+    if (fontSizeValue) {
+      fontSizeValue.textContent = savedSize;
+    }
+  }
+});
+</script>
   </body>
 </html>

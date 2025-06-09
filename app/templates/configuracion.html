@@ -62,7 +62,7 @@
                   <div class="form-text">Formatos aceptados: JPG, PNG. Máx. 2MB</div>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
               </form>
             </div>
             
@@ -107,6 +107,7 @@
                   <input type="range" class="form-range" min="12" max="24" step="1" id="fontSize" style="width: 60%">
                   <span class="ms-2">A</span>
                   <span class="ms-3" id="fontSizeValue">16px</span>
+                  <button type="button" class="btn btn-brown ms-3" id="applyFontSize">Aplicar</button>
                 </div>
               </div>
               
@@ -115,7 +116,7 @@
                 <div class="row">
                   <div class="col-md-3 mb-3">
                     <div class="theme-option bg-light p-3 rounded text-center" data-theme="light">
-                      <div class="theme-preview bg-white p-2 mb-2 border">Claro</div>
+                      <div class="theme-preview bg-white p-2 mb-2 border" style="color: black;">Claro</div>
                       <button class="btn btn-sm btn-outline-primary">Seleccionar</button>
                     </div>
                   </div>
@@ -163,9 +164,27 @@
 
 
 <script>
-  // Actualizar el valor del tamaño de fuente
+  // Cambia el tamaño de fuente del body y lo guarda en localStorage
   document.getElementById('fontSize').addEventListener('input', function() {
-    document.getElementById('fontSizeValue').textContent = this.value + 'px';
+  const size = this.value + 'px';
+  document.getElementById('fontSizeValue').textContent = size;
+});
+
+  // Aplica el tamaño de fuente al pulsar "Aplicar"
+  document.getElementById('applyFontSize').addEventListener('click', function() {
+  const size = document.getElementById('fontSize').value + 'px';
+  document.body.style.fontSize = size;
+  localStorage.setItem('fontSize', size);
+});
+
+  // Al cargar la página, aplica el tamaño guardado
+  document.addEventListener('DOMContentLoaded', function() {
+    const savedSize = localStorage.getItem('fontSize');
+    if (savedSize) {
+      document.body.style.fontSize = savedSize;
+      document.getElementById('fontSize').value = parseInt(savedSize);
+      document.getElementById('fontSizeValue').textContent = savedSize;
+    }
   });
 
   // Manejar la selección de temas
