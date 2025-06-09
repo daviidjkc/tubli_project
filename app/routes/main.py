@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, send_file, redirect, url_for, flash
+from flask import Blueprint, render_template, request, jsonify, send_file, redirect, url_for, flash, abort
 from app.models import Book, User
 import requests
 import tempfile
@@ -203,17 +203,24 @@ def check_username():
 @login_required
 def update_profile():
     username = request.form.get('nombre')
-    email = request.form.get('email')
-    bio = request.form.get('bio')
+    foto = request.files.get('fotoPerfil')
     # Verifica si el nombre ya existe y no es el del usuario actual
     if username != current_user.username:
         if User.query.filter_by(username=username).first():
             return jsonify({'success': False, 'message': 'El nombre de usuario ya existe.'})
     current_user.username = username
-    current_user.email = email
-    current_user.bio = bio
+
+    # Guardar la foto de perfil si se subió una nueva
+    if foto and foto.filename:
+        filename = secure_filename(foto.filename)
+        upload_folder = os.path.join('app', 'static', 'uploads', 'profile_pics')
+        os.makedirs(upload_folder, exist_ok=True)
+        foto_path = os.path.join(upload_folder, filename)
+        foto.save(foto_path)
+        current_user.profile_pic = f'uploads/profile_pics/{filename}'
+
     db.session.commit()
-    return jsonify({'success': True, 'message': '¡Tu nombre ha sido cambiado exitosamente!'})
+    return jsonify({'success': True, 'message': '¡Perfil actualizado!'})
 
 @main_bp.route('/favoritos')
 @login_required
@@ -249,4 +256,33 @@ def send_help_email():
     # Por ahora solo mostramos un mensaje de éxito
     flash('Tu mensaje ha sido enviado. Nos pondremos en contacto contigo pronto.', 'success')
     return redirect(url_for('main.help'))
+
+@main_bp.route('/editar_libro/<int:book_id>', methods=['GET', 'POST'])
+@login_required
+def editar_libro(book_id):
+    libro = Book.query.get_or_404(book_id)
+    if libro.user_id != current_user.id:
+        abort(403)
+    if request.method == 'POST':
+        libro.title = request.form.get('title')
+        libro.summary = request.form.get('summary')
+        libro.author = request.form.get('author')
+        libro.year = request.form.get('year')
+        libro.language = request.form.get('language')
+        libro.subject = request.form.get('subject')
+        db.session.commit()
+        flash('Libro actualizado correctamente.', 'success')
+        return redirect(url_for('main.mis_libros'))
+    return render_template('editar_libro.html', libro=libro)
+
+@main_bp.route('/eliminar_libro/<int:book_id>', methods=['POST'])
+@login_required
+def eliminar_libro(book_id):
+    libro = Book.query.get_or_404(book_id)
+    if libro.user_id != current_user.id:
+        abort(403)
+    db.session.delete(libro)
+    db.session.commit()
+    flash('Libro eliminado correctamente.', 'success')
+    return redirect(url_for('main.mis_libros'))
 

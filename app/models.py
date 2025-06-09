@@ -33,9 +33,10 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-    role = db.Column(db.String(20), default='user')  # 'user' o 'admin'
+    role = db.Column(db.String(20), default='user')
     books = db.relationship('Book', backref='user', lazy=True)
     favorites = db.relationship('Book', secondary=favorites, backref='favorited_by')
+    profile_pic = db.Column(db.String(255), default='img/user_icon.png')  # NUEVO
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

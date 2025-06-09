@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Editar Libro</h2>
+  <form method="POST">
+    <div class="mb-3">
+      <label class="form-label">Título</label>
+      <input type="text" class="form-control" name="title" value="{{ libro.title }}" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Autor</label>
+      <input type="text" class="form-control" name="author" value="{{ libro.author }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Año</label>
+      <input type="number" class="form-control" name="year" value="{{ libro.year }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Idioma</label>
+      <input type="text" class="form-control" name="language" value="{{ libro.language }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Tema</label>
+      <input type="text" class="form-control" name="subject" value="{{ libro.subject }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Resumen</label>
+      <textarea class="form-control" name="summary">{{ libro.summary }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    <a href="{{ url_for('main.mis_libros') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}
