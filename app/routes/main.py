@@ -236,3 +236,17 @@ def toggle_favorito(book_id):
         return jsonify({'status': status})
     return redirect(request.referrer or url_for('main.index'))
 
+@main_bp.route('/help', methods=['GET', 'POST'])
+def help():
+    return render_template('help.html')
+
+@main_bp.route('/send_help_email', methods=['POST'])
+def send_help_email():
+    email = request.form.get('email')
+    subject = request.form.get('subject')
+    message = request.form.get('message')
+    # Aquí deberías enviar el correo usando tu sistema preferido (Flask-Mail, SMTP, etc.)
+    # Por ahora solo mostramos un mensaje de éxito
+    flash('Tu mensaje ha sido enviado. Nos pondremos en contacto contigo pronto.', 'success')
+    return redirect(url_for('main.help'))
+

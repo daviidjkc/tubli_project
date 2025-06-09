@@ -428,3 +428,15 @@ body.dark-mode .card-text {
 card-security{
     margin-bottom: 5px;
 }
+
+.btn-brown {
+  color: #4e2e1e !important;
+  text-decoration: underline;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.btn-brown:hover {
+  color: #ad6060 !important;
+  text-decoration: underline;
+}

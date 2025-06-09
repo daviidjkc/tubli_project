@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Ayuda{% endblock %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <h2 class="mb-4 text-center">Ayuda y Manual de Usuario</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="alert alert-info">
+                Si tienes algún problema o consulta, rellena el siguiente formulario y nos pondremos en contacto contigo.
+            </div>
+            <form method="POST" action="{{ url_for('main.send_help_email') }}">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="tu@email.com" required>
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="form-label">Asunto</label>
+                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Asunto del mensaje" required>
+                </div>
+                <div class="mb-3">
+                    <label for="message" class="form-label">Mensaje</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" placeholder="Describe tu problema o consulta" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-ver-detalles">Enviar</button>
+            </form>
+            <hr class="my-4">
+            <div class="text-center">
+                <h5>Manual de Usuario</h5>
+                <p>Puedes descargar el manual completo de la aplicación aquí:</p>
+                <a href="{{ url_for('static', filename='manuals/ManualTUBLI.pdf') }}" class="btn btn-ver-detalles" download>Descargar Manual (PDF)</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

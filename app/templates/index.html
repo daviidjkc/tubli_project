@@ -148,6 +148,11 @@
   </div>
   {% endif %}
 
+  <!-- Enlace Help alineado a la derecha al final de la página -->
+  <div class="d-flex justify-content-end mt-5 mb-3">
+    <a href="{{ url_for('main.help') }}" class="btn btn-brown">Ayuda</a>
+  </div>
+
   <script>
   document.querySelectorAll('.fav-form').forEach(form => {
     form.addEventListener('submit', function(e) {
