@@ -122,9 +122,9 @@ body {
 }
 
 .card-title, .card-text {
-  white-space: normal !important;     /* Permite saltos de línea */
-  overflow-wrap: break-word !important; /* Rompe palabras largas si es necesario */
-  word-break: break-word !important;    /* Rompe palabras largas */
+  white-space: nowrap !important;      /* Una sola línea */
+  overflow: hidden !important;         /* Oculta el texto que se sale */
+  text-overflow: ellipsis !important;  /* Añade puntos suspensivos */
 }
 
 .card-text {
