@@ -35,9 +35,9 @@
           <div class="tab-content">
             <!-- Pestaña de Perfil -->
             <div class="tab-pane fade show active" id="perfil">
-              <h5 class="mb-4">Información del Perfil</h5>
-              <form id="perfil-form" enctype="multipart/form-data">
-                <div class="row mb-3">
+              <h5 class="mb-1">Información del Perfil</h5>
+              <form id="perfil-form" enctype="multipart/form-data" method="POST" action="/update_profile">
+                <div class="row mb-1">
                   <div class="col-md-6">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" value="{{ current_user.username }}">
@@ -56,13 +56,14 @@
                   <textarea class="form-control" id="bio" rows="3" placeholder="Cuéntanos algo sobre ti..."></textarea>
                 </div>
                 
-                <div class="mb-4">
+                <div class="mb-1">
                   <label for="fotoPerfil" class="form-label">Foto de perfil</label>
                   <input type="file" class="form-control" id="fotoPerfil" name="fotoPerfil">
                   <div class="form-text">Formatos aceptados: JPG, PNG. Máx. 2MB</div>
                 </div>
-                
-                <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
+                <div class="text-start mb-1">
+                  <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </div>
               </form>
             </div>
             

@@ -160,7 +160,7 @@ def add_book():
         flash('El libro contiene palabras inapropiadas. Por favor, revisa el contenido.', 'danger')
         return redirect(url_for('main.index'))
 
-    # --- COMPROBAR LIBRO REPETIDO SOLO POR TÍTULO (ignorando mayúsculas y espacios) ---
+    # --- COMPROBAR LIBRO REPETIDO SOLO POR TÍTULO ---
     titulo_normalizado = title.strip().lower()
     libro_existente = Book.query.filter(
         func.lower(func.trim(Book.title)) == titulo_normalizado
