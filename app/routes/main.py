@@ -4,10 +4,11 @@ import requests
 import tempfile
 import os
 import io
-from sqlalchemy import case, or_
+from sqlalchemy import case, or_, func
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from app import db
+from app.utils import PALABRAS_PROHIBIDAS, contiene_palabras_prohibidas
 
 main_bp = Blueprint('main', __name__)
 
@@ -131,6 +132,12 @@ def convert_epub_to_pdf(book_id):
         flash('No se pudo convertir el archivo a PDF.', 'danger')
         return redirect(url_for('main.book_detail', book_id=book_id))
 
+def contiene_palabras_prohibidas(texto):
+    if not texto:
+        return False
+    texto = texto.lower()
+    return any(palabra in texto for palabra in PALABRAS_PROHIBIDAS)
+
 @main_bp.route('/add_book', methods=['POST'])
 @login_required
 def add_book():
@@ -143,6 +150,24 @@ def add_book():
     cover_url = request.form.get('cover_url')
     cover_file = request.files.get('cover_file')
     epub_file = request.files.get('epub_file')
+
+    # --- FILTRO DE PALABRAS PROHIBIDAS ---
+    if (
+        contiene_palabras_prohibidas(title)
+        or contiene_palabras_prohibidas(summary)
+        or contiene_palabras_prohibidas(subject)
+    ):
+        flash('El libro contiene palabras inapropiadas. Por favor, revisa el contenido.', 'danger')
+        return redirect(url_for('main.index'))
+
+    # --- COMPROBAR LIBRO REPETIDO SOLO POR TÍTULO (ignorando mayúsculas y espacios) ---
+    titulo_normalizado = title.strip().lower()
+    libro_existente = Book.query.filter(
+        func.lower(func.trim(Book.title)) == titulo_normalizado
+    ).first()
+    if libro_existente:
+        flash('Ya existe un libro con ese título.', 'danger')
+        return redirect(url_for('main.index'))
 
     # Crear carpeta uploads si no existe
     upload_folder = os.path.join(os.getcwd(), 'static', 'uploads')
@@ -208,6 +233,8 @@ def update_profile():
     if username != current_user.username:
         if User.query.filter_by(username=username).first():
             return jsonify({'success': False, 'message': 'El nombre de usuario ya existe.'})
+    if contiene_palabras_prohibidas(username):
+        return jsonify({'success': False, 'message': 'El nombre de usuario contiene palabras inapropiadas.'})
     current_user.username = username
 
     # Guardar la foto de perfil si se subió una nueva
