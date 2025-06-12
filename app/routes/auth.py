@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models import User
 from app import db
+import requests
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -25,6 +26,17 @@ def register():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+        recaptcha_response = request.form.get('g-recaptcha-response')
+        secret = 'TU_SECRET_KEY_AQUI'
+        payload = {
+            'secret': secret,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=payload)
+        result = r.json()
+        if not result.get('success'):
+            flash('Por favor, verifica que no eres un robot.', 'danger')
+            return redirect(url_for('auth.register'))
         # Verificar si el usuario ya existe
         if User.query.filter((User.username==username)|(User.email==email)).first():
             flash('El usuario ya existe.', 'warning')
